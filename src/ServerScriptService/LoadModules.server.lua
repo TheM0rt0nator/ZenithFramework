@@ -1,3 +1,6 @@
-local Framework = require(game:GetService("ReplicatedStorage").ZenithFramework)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-Framework:LoadAll()
+local Framework = require(ReplicatedStorage.ZenithFramework)
+local require = Framework.require
+
+require:LoadAll()

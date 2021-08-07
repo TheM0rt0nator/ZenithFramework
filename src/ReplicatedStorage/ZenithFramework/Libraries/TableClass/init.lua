@@ -3,7 +3,8 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local require = require(ReplicatedStorage.ZenithFramework)
+local Framework = require(ReplicatedStorage.ZenithFramework)
+local require = Framework.require
 
 local Table = require("Table")
 
