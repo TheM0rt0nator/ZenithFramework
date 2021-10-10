@@ -4,31 +4,20 @@
 local RunService = game:GetService("RunService")
 
 local ModuleScriptLoader = require(script.ModuleScriptLoader)
-local RemoteHandler = require(script.RemoteHandler)
-local BindableHandler = require(script.BindableHandler)
+local DataStreamHandler = require(script.DataStreamHandler)
 
 local Framework = {}
 
 if RunService:IsServer() then
     local newLoader = ModuleScriptLoader.new("Server")
-    local remoteHandler = RemoteHandler.new()
-    local bindableHandler = BindableHandler.new()
+    local dataStreamHandler = DataStreamHandler.new()
 
-    return {
-        require = newLoader, 
-        getRemote = remoteHandler, 
-        getBindable = bindableHandler
-    }
+    return {newLoader, dataStreamHandler}
 elseif RunService:IsClient() then
     local newLoader = ModuleScriptLoader.new("Client")
-    local remoteHandler = RemoteHandler.new()
-    local bindableHandler = BindableHandler.new()
+    local dataStreamHandler = DataStreamHandler.new()
 
-    return {
-        require = newLoader, 
-        getRemote = remoteHandler, 
-        getBindable = bindableHandler
-    }
+    return {newLoader, dataStreamHandler}
 end
 
 return Framework

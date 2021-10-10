@@ -5,7 +5,9 @@ local RunService = game:GetService("RunService")
 local CollisionGroups = {}
 
 local DEFAULT_GROUPS = {
-
+    Player = {
+        Player = false
+    }
 }
 
 if RunService:IsServer() then

@@ -1,6 +1,3 @@
--- Module loader
--- Author: TheM0rt0nator
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local StarterPlayer = game:GetService("StarterPlayer")
@@ -19,6 +16,7 @@ ModuleScriptLoader.__index = ModuleScriptLoader
 function ModuleScriptLoader.new(loadLocation)
     local self = setmetatable({}, ModuleScriptLoader)
 
+    print("New module script loader made")
     self._modules = {}
 
     if loadLocation == "Server" then
