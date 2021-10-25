@@ -9,15 +9,15 @@ local DataStreamHandler = require(script.DataStreamHandler)
 local Framework = {}
 
 if RunService:IsServer() then
-    local newLoader = ModuleScriptLoader.new("Server")
-    local dataStreamHandler = DataStreamHandler.new()
+	local newLoader = ModuleScriptLoader.new("Server")
+	local dataStreamHandler = DataStreamHandler.new()
 
-    return {newLoader, dataStreamHandler}
+	return {newLoader, dataStreamHandler}
 elseif RunService:IsClient() then
-    local newLoader = ModuleScriptLoader.new("Client")
-    local dataStreamHandler = DataStreamHandler.new()
+	local newLoader = ModuleScriptLoader.new("Client")
+	local dataStreamHandler = DataStreamHandler.new()
 
-    return {newLoader, dataStreamHandler}
+	return {newLoader, dataStreamHandler}
 end
 
 return Framework
