@@ -97,4 +97,23 @@ function Table.removeListDuplicates(tab)
 	return tab
 end
 
+-- Merges the given tables into a new table, where keys specified in later tables will overwrite keys in previous tables
+function Table.merge(...)
+	local newTab = {}
+
+	for i = 1, select("#", ...) do
+		local tab = select(i, ...)
+
+		for index, val in pairs(tab) do
+			if val == "Table.None" then
+				newTab[index] = nil
+			else
+				newTab[index] = val
+			end
+		end
+	end
+
+	return newTab
+end
+
 return Table
