@@ -9,7 +9,7 @@ local Table = require("Table")
 
 local DataStore = {}
 DataStore.Data = {}
-DataStore.DataChangedCheck = {}
+DataStore.DataCache = {}
 
 local AUTOSAVE_INTERVAL = 60
 local WAIT_INTERVAL = 30
@@ -18,7 +18,7 @@ local WAIT_INTERVAL = 30
 function DataStore.getStoredData(dataStore)
 	if not DataStore.Data[dataStore] then
 		DataStore.Data[dataStore] = {}
-		DataStore.DataChangedCheck[dataStore] = {}
+		DataStore.DataCache[dataStore] = {}
 	end
 	return DataStore.Data[dataStore]
 end
@@ -36,7 +36,7 @@ function DataStore.setSessionData(dataStore, index, newData)
 		data[index] = newData
 	end
 
-	DataStore.DataChangedCheck[dataStore][index] = true
+	DataStore.DataCache[dataStore][index] = newData
 end
 
 -- Gets the data in the given data store with the given index, saves it in the Data table and returns it
@@ -47,7 +47,7 @@ function DataStore.getData(dataStore, index)
 	local data = DataStore.getStoredData(dataStore)
 	if data[index] then return data[index] end
 	local success, data = pcall(function()
-		data:GetAsync(index)
+		dataStore:GetAsync(index)
 	end)
 	if success then 
 		data[index] = data
@@ -57,7 +57,7 @@ function DataStore.getData(dataStore, index)
 	end
 end
 
--- Waits for the data and repeatedly tried the getData function until it gets the data
+-- Waits for the data and repeatedly tries the getData function until it gets the data
 function DataStore.waitForData(dataStore, index)
 	assert(typeof(dataStore) == "Instance", "dataStore argument must be a DataStore instance")
 	assert(typeof(index) == "string", "index argument must be a string")
@@ -87,17 +87,15 @@ function DataStore.setDataAsync(dataStore, index, newData)
 	if not success then
 		warn("Failed to save data to DataStore: " , dataStore , " with index: " , index , " due to error: " , errorMessage)
 	else
-		DataStore.DataChangedCheck[dataStore][index] = nil
+		DataStore.DataCache[dataStore][index] = nil
 	end
 end
 
 -- Saves all data in all datastores
 function DataStore.saveAllData()
-	for dataStore, data in pairs(DataStore.Data) do
+	for dataStore, data in pairs(DataStore.DataCache) do
 		for index, value in pairs(data) do
-			if DataStore.DataChangedCheck[dataStore][index] then
-				DataStore.setDataAsync(dataStore, index, value)
-			end
+			DataStore.setDataAsync(dataStore, index, value)
 		end
 	end
 end
