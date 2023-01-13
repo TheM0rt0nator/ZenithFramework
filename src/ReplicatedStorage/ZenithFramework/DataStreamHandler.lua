@@ -23,25 +23,27 @@ if RunService:IsServer() then
 	RemotesFolder.Parent = ReplicatedStorage
 
 	BindablesFolder = Instance.new("Folder")
-	BindablesFolder.Name = "BindablesFolder"
+	BindablesFolder.Name = "Bindables"
 	BindablesFolder.Parent = ServerStorage
 elseif RunService:IsClient() then
 	RemotesFolder = ReplicatedStorage:WaitForChild("Remotes")
 
 	BindablesFolder = Instance.new("Folder")
-	BindablesFolder.Name = "BindablesFolder"
+	BindablesFolder.Name = "Bindables"
 	BindablesFolder.Parent = ReplicatedStorage
 end
 
+-- Creates a new data stream handler object
 function DataStreams.new()
 	return setmetatable({}, DataStreams)
 end
 
-function DataStreams:GetDataStream(streamName, streamType)
+-- Returns a data steam with the given name and type, after creating it or getting it (if it already exists)
+function DataStreams:getDataStream(streamName, streamType)
 	assert(typeof(streamName) == "string" and PossibleStreams[streamType], "Invalid arguments while trying to get data stream")
 
 	local function getStream(folder)
-		if folder:WaitForChild(streamName, 1) then 
+		if folder:FindFirstChild(streamName) then
 			return folder:FindFirstChild(streamName)
 		else
 			local newStream = Instance.new(streamType, folder)
@@ -58,7 +60,7 @@ function DataStreams:GetDataStream(streamName, streamType)
 	if RunService:IsServer() then
 		return getStream(RemotesFolder)
 	elseif RunService:IsClient() then
-		if RemotesFolder:WaitForChild(streamName, 1) then
+		if RemotesFolder:WaitForChild(streamName, 10) then
 			return RemotesFolder:FindFirstChild(streamName)
 		end
 
@@ -68,7 +70,7 @@ end
 
 -- When the module is called like a function, either creates the remote or returns the already created remote
 function DataStreams:__call(streamName, streamType)
-	return self:GetDataStream(streamName, streamType)
+	return self:getDataStream(streamName, streamType)
 end
 
 return DataStreams

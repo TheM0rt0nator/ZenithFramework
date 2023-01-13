@@ -1,0 +1,3 @@
+local DefaultData = {}
+
+return DefaultData
